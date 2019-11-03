@@ -1,0 +1,12 @@
+
+gorm:
+  DbMaxIdleConns: 200
+  DbMaxOpenConns: 2000
+  DbConnMaxLifetime: 30
+
+server:
+  port: 3000
+  debug: true
+
+
+

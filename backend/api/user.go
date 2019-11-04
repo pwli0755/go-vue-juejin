@@ -32,6 +32,7 @@ func UserLogin(c *gin.Context) {
 		} else {
 			// 设置Session
 			s := sessions.Default(c)
+			// TODO 限制同时只能有一个设备登录
 			s.Clear()
 			s.Set("user_id", user.ID)
 			s.Save()

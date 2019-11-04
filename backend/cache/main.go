@@ -3,6 +3,7 @@ package cache
 import (
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -17,6 +18,9 @@ func Redis() {
 		Addr:     os.Getenv("REDIS_ADDR"),
 		Password: os.Getenv("REDIS_PW"),
 		DB:       int(db),
+		//PoolSize:80,
+		MaxRetries: 2,
+		IdleTimeout: time.Minute*3,
 	})
 
 	_, err := client.Ping().Result()

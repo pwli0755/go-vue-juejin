@@ -19,10 +19,17 @@
       <!---->
       <div class="input-group">
         <div class="input-box">
-          <input name="loginPhoneOrEmail" maxlength="64" placeholder="请输入用户名或邮箱" class="input" />
+          <input
+            v-model="user_name"
+            name="loginPhoneOrEmail"
+            maxlength="64"
+            placeholder="请输入用户名或邮箱"
+            class="input"
+          />
         </div>
         <div class="input-box">
           <input
+            v-model="password"
             name="loginPassword"
             type="password"
             maxlength="64"
@@ -31,7 +38,7 @@
           />
         </div>
       </div>
-      <button class="btn">登录</button>
+      <button class="btn" @click.prevent="login">登录</button>
       <div class="prompt-box">
         没有账号？
         <span class="clickable" @click="switchAuthType('reg')">注册</span>
@@ -77,15 +84,53 @@
 
 <script>
 import { mapActions } from "vuex";
+import * as API from "@/api/auth/";
 export default {
   data() {
-    return {};
+    return {
+      user_name: "",
+      password: ""
+    };
   },
   methods: {
     ...mapActions([
       "hideAuth", // 将 `this.hideAuth()` 映射为 `this.$store.dispatch('hideAuth')`
       "switchAuthType"
-    ])
+    ]),
+    login() {
+      // console.log(process.env)
+
+      if (this.user_name == "") {
+        this.$notify({
+          message: "请输入用户名",
+          customClass: "error",
+          showClose: false
+        });
+        return;
+      } else if (this.password == "") {
+        this.$notify({
+          message: "请输入密码",
+          customClass: "error",
+          showClose: false
+        });
+        return;
+      }
+      API.login({ user_name: this.user_name, password: this.password })
+        .then(res => {
+          this.$notify({
+            message: res.data.msg||res.data.error,
+            customClass: "error",
+            showClose: false
+          });
+        })
+        .catch(error => {
+          this.$notify({
+            message: error.data.error,
+            customClass: "error",
+            showClose: false
+          });
+        });
+    }
   }
 };
 </script>
@@ -232,5 +277,18 @@ img {
 }
 .agreement-box a {
   color: #007fff;
+}
+</style>
+<style lang="less">
+.el-notification.error {
+  display: flex;
+  align-items: baseline;
+  background-color: #e6f3ff;
+  width: 20%;
+  border-radius: 0;
+  padding: 10px;
+  p {
+    color: #007fff;
+  }
 }
 </style>

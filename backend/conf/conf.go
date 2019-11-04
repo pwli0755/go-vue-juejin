@@ -15,6 +15,7 @@ import (
 type Config struct {
 	Server `yaml:"server"`
 	Gorm   `yaml:"gorm"`
+	Redis 	`yaml:"redis"`
 }
 
 type Gorm struct {
@@ -28,7 +29,11 @@ type Server struct {
 	Port  string `yaml:"port"`
 	Debug bool   `yaml:"debug"`
 }
-
+type Redis struct {
+	MaxRetries int `yaml:"MaxRetries"`
+	PoolSize int `yaml:"PoolSize"`
+	IdleTimeout int `yaml:"IdleTimeout"`
+}
 var Conf Config
 
 // 项目相关配置，不含敏感信息

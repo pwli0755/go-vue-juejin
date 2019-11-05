@@ -26,7 +26,7 @@ func GetDbConn(connString string, maxIdleConns, maxOpenConns, maxLifeTime int) {
 	//打开
 	db.DB().SetMaxOpenConns(maxOpenConns)
 	//超时
-	db.DB().SetConnMaxLifetime(time.Second *time.Duration(maxLifeTime))
+	db.DB().SetConnMaxLifetime(time.Second * time.Duration(maxLifeTime))
 
 	DB = db
 

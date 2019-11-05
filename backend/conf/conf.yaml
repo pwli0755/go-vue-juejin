@@ -1,4 +1,3 @@
-
 gorm:
   DbMaxIdleConns: 200
   DbMaxOpenConns: 2000

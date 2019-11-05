@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	if !conf.Conf.Server.Debug{
+	if !conf.Conf.Server.Debug {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	// 装载路由

@@ -78,8 +78,7 @@ var MsgFlags = map[int]string{
 	ERR_USER_NAME:                  "用户名已被注册",
 	ERR_GEN_PASSWD:                 "密码生成失败",
 	ERR_REGISTER:                   "注册失败",
-	ERR_WRONG_USER_PASSWD: "用户名或密码错误",
-
+	ERR_WRONG_USER_PASSWD:          "用户名或密码错误",
 }
 
 func GetMsg(code int) string {

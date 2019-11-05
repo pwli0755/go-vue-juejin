@@ -23,20 +23,20 @@ type UserResponse struct {
 // BuildUser 序列化用户
 func BuildUser(user model.User) User {
 	return User{
-		ID:        user.ID,
-		UserName:  user.UserName,
-		Email:  user.Email,
-		PhoneNumber:user.PhoneNumber,
-		Status:    user.Status,
-		Avatar:    user.Avatar,
-		CreatedAt: user.CreatedAt.Unix(),
+		ID:          user.ID,
+		UserName:    user.UserName,
+		Email:       user.Email,
+		PhoneNumber: user.PhoneNumber,
+		Status:      user.Status,
+		Avatar:      user.Avatar,
+		CreatedAt:   user.CreatedAt.Unix(),
 	}
 }
 
 // BuildUserResponse 序列化用户响应
 func BuildUserResponse(user model.User, resp Response) UserResponse {
 	return UserResponse{
-		Response:resp,
-		Data: BuildUser(user),
+		Response: resp,
+		Data:     BuildUser(user),
 	}
 }

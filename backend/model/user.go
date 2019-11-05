@@ -9,8 +9,8 @@ import (
 type User struct {
 	gorm.Model
 	UserName       string `gorm:"type:char(30);unique"`
-	PhoneNumber	string `gorm:"type:char(11)"`
-	Email string	`gorm:"type:varchar(100);unique_index"`
+	PhoneNumber    string `gorm:"type:char(11)"`
+	Email          string `gorm:"type:varchar(100);unique_index"`
 	PasswordDigest string
 	Status         string
 	Avatar         string `gorm:"size:1000";default:"avatar.png"`
@@ -51,20 +51,21 @@ func (user *User) CheckPassword(password string) bool {
 }
 
 // Create 创建用户
-func CreateUser(user *User) error{
+func CreateUser(user *User) error {
 	return DB.Create(user).Error
 }
+
 // ActiveUser 激活用户
-func ActiveUser(user *User) error{
+func ActiveUser(user *User) error {
 	return DB.Model(user).Update("status", Inactive).Error
 }
 
 // SuspendUser封禁用户
-func SuspendUser(user *User) error{
+func SuspendUser(user *User) error {
 	return DB.Model(user).Update("status", Suspend).Error
 }
 
 // Delete 删除用户（软删除）
-func DeleteUser(user *User) error{
+func DeleteUser(user *User) error {
 	return DB.Delete(user).Error
 }

@@ -15,7 +15,7 @@ import (
 type Config struct {
 	Server `yaml:"server"`
 	Gorm   `yaml:"gorm"`
-	Redis 	`yaml:"redis"`
+	Redis  `yaml:"redis"`
 }
 
 type Gorm struct {
@@ -30,10 +30,11 @@ type Server struct {
 	Debug bool   `yaml:"debug"`
 }
 type Redis struct {
-	MaxRetries int `yaml:"MaxRetries"`
-	PoolSize int `yaml:"PoolSize"`
+	MaxRetries  int `yaml:"MaxRetries"`
+	PoolSize    int `yaml:"PoolSize"`
 	IdleTimeout int `yaml:"IdleTimeout"`
 }
+
 var Conf Config
 
 // 项目相关配置，不含敏感信息
@@ -56,9 +57,9 @@ func init() {
 
 	currentFilePath := util.CurrentFile()
 	// 读取并加载环境变量, env一般配置敏感信息
-	godotenv.Load(path.Join(path.Dir(currentFilePath),"../.env"))
+	godotenv.Load(path.Join(path.Dir(currentFilePath), "../.env"))
 	// 读取翻译文件
-	if err := LoadLocales(path.Join(path.Dir(currentFilePath),"locales/zh-cn.yaml")); err != nil {
+	if err := LoadLocales(path.Join(path.Dir(currentFilePath), "locales/zh-cn.yaml")); err != nil {
 		panic(err)
 	}
 

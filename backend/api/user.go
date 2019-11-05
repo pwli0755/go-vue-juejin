@@ -1,8 +1,12 @@
 package api
 
 import (
+	"backend/cache"
 	"backend/serializer"
 	"backend/service"
+	"backend/util"
+	"reflect"
+	"strconv"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -15,7 +19,7 @@ func UserRegister(c *gin.Context) {
 		if user, err := service.Register(); err != nil {
 			c.JSON(200, err)
 		} else {
-			res := serializer.BuildUserResponse(user, serializer.Response{Msg:"注册成功"})
+			res := serializer.BuildUserResponse(user, serializer.Response{Msg: "注册成功"})
 			c.JSON(200, res)
 		}
 	} else {
@@ -32,12 +36,28 @@ func UserLogin(c *gin.Context) {
 		} else {
 			// 设置Session
 			s := sessions.Default(c)
-			// TODO 限制同时只能有一个设备登录
+			// 限制同时只能有一个设备登录
+			sessionPrefix := "session_"
+			// 通过反射获取session ID
+			ID := reflect.ValueOf(s).Elem().FieldByName("session").Elem().FieldByName("ID").String()
+			sessionID := sessionPrefix + ID
+			// 将上次登录生成的session清空
+			sessionIdx := cache.SessionIdxPrefix + strconv.FormatUint(uint64(user.ID), 10)
+			// 获取上次登陆的session ID
+			if previousSsnID, err := cache.RedisClient.Get(sessionIdx).Result(); err == nil {
+				_, err := cache.RedisClient.Del(previousSsnID).Result()
+				if err != nil {
+					util.Log.Error("Delete previous session failed!")
+				}
+			}
 			s.Clear()
 			s.Set("user_id", user.ID)
 			s.Save()
 
-			res := serializer.BuildUserResponse(user, serializer.Response{Msg:"登录成功"})
+			// 将sessionID存储至redis
+			cache.RedisClient.Set(sessionIdx, sessionID, 0)
+
+			res := serializer.BuildUserResponse(user, serializer.Response{Msg: "登录成功"})
 			c.JSON(200, res)
 		}
 	} else {
@@ -48,7 +68,7 @@ func UserLogin(c *gin.Context) {
 // UserMe 用户详情
 func UserMe(c *gin.Context) {
 	user := CurrentUser(c)
-	res := serializer.BuildUserResponse(*user, serializer.Response{Msg:"用户详情"})
+	res := serializer.BuildUserResponse(*user, serializer.Response{Msg: "用户详情"})
 	c.JSON(200, res)
 }
 

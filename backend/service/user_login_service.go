@@ -17,11 +17,11 @@ func (service *UserLoginService) Login() (model.User, *serializer.Response) {
 	var user model.User
 
 	if err := model.DB.Where("user_name = ?", service.UserName).First(&user).Error; err != nil {
-		return user,errs.BuildErrorResponse(errs.ERR_WRONG_USER_PASSWD)
+		return user, errs.BuildErrorResponse(errs.ERR_WRONG_USER_PASSWD)
 	}
 
 	if user.CheckPassword(service.Password) == false {
-		return user,errs.BuildErrorResponse(errs.ERR_WRONG_USER_PASSWD)
+		return user, errs.BuildErrorResponse(errs.ERR_WRONG_USER_PASSWD)
 	}
 	return user, nil
 }

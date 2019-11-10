@@ -6,6 +6,7 @@ gorm:
 server:
   port: 3000
   debug: true
+  multiDevices: false
 
 
 

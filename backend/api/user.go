@@ -2,6 +2,7 @@ package api
 
 import (
 	"backend/cache"
+	"backend/conf"
 	"backend/serializer"
 	"backend/service"
 	"backend/util"
@@ -37,25 +38,26 @@ func UserLogin(c *gin.Context) {
 			// 设置Session
 			s := sessions.Default(c)
 			// 限制同时只能有一个设备登录
-			sessionPrefix := "session_"
-			// 通过反射获取session ID
-			ID := reflect.ValueOf(s).Elem().FieldByName("session").Elem().FieldByName("ID").String()
-			sessionID := sessionPrefix + ID
-			// 将上次登录生成的session清空
-			sessionIdx := cache.SessionIdxPrefix + strconv.FormatUint(uint64(user.ID), 10)
-			// 获取上次登陆的session ID
-			if previousSsnID, err := cache.RedisClient.Get(sessionIdx).Result(); err == nil {
-				_, err := cache.RedisClient.Del(previousSsnID).Result()
-				if err != nil {
-					util.Log.Error("Delete previous session failed!")
+			if !conf.Conf.Server.MultiDevices {
+				sessionPrefix := "session_"
+				// 通过反射获取session ID
+				ID := reflect.ValueOf(s).Elem().FieldByName("session").Elem().FieldByName("ID").String()
+				sessionID := sessionPrefix + ID
+				// 将上次登录生成的session清空
+				sessionIdx := cache.SessionIdxPrefix + strconv.FormatUint(uint64(user.ID), 10)
+				// 获取上次登陆的session ID
+				if previousSsnID, err := cache.RedisClient.Get(sessionIdx).Result(); err == nil {
+					_, err := cache.RedisClient.Del(previousSsnID).Result()
+					if err != nil {
+						util.Log.Error("Delete previous session failed!")
+					}
 				}
+				// 将sessionID存储至redis
+				cache.RedisClient.Set(sessionIdx, sessionID, 0)
 			}
 			s.Clear()
 			s.Set("user_id", user.ID)
 			s.Save()
-
-			// 将sessionID存储至redis
-			cache.RedisClient.Set(sessionIdx, sessionID, 0)
 
 			res := serializer.BuildUserResponse(user, serializer.Response{Msg: "登录成功"})
 			c.JSON(200, res)

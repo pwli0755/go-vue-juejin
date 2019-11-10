@@ -40,10 +40,32 @@
             <span>写文章</span>
             <!---->
           </li>
-          <li class="nav-item auth">
+          <li class="nav-item auth" v-if="!isLogin">
             <span class="login" @click="showLogin">登录</span>
             <span class="register" @click="showReg">注册</span>
           </li>
+          <template v-else>
+            <li class="nav-item notify">
+              <i class="el-icon-message-solid"></i>
+            </li>
+            <li class="nav-item user-dropdown-list">
+              <el-dropdown trigger="click">
+                <span class="el-dropdown-link">
+                  <el-avatar :size="30" :src="user.avatar||defaultAvatar" shape="circle">user</el-avatar>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item><i class="el-icon-edit"></i>写文章</el-dropdown-item>
+                  <el-dropdown-item><i class="el-icon-document"></i>草稿</el-dropdown-item>
+                  <el-dropdown-item><i class="el-icon-sugar"></i>我赞过的</el-dropdown-item>
+                  <el-dropdown-item ><i class="el-icon-star-on"></i>我的收藏集</el-dropdown-item>
+                  <el-dropdown-item ><i class="el-icon-price-tag"></i>标签管理</el-dropdown-item>
+                  <el-dropdown-item divided><i class="el-icon-user-solid"></i>我的主页</el-dropdown-item>
+                  <el-dropdown-item ><i class="el-icon-s-tools"></i>设置</el-dropdown-item>
+                  <el-dropdown-item @click.native="logout"><i class="el-icon-circle-close"></i>登出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </li>
+          </template>
         </ul>
       </nav>
     </div>
@@ -52,30 +74,50 @@
 
 <script>
 import logoUrl from "../assets/logo.svg";
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
+import defaultAvatar from "../assets/avatar.png";
 
 export default {
   data() {
     return {
       logoUrl: logoUrl,
-
-    };
+      defaultAvatar,
+    }
   },
-  methods:{
-     ...mapActions([
-      'showAuth', // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+  mounted() {
+  },
+  computed:{
+    isLogin(){
+      return this.getLoginState() || this.$cookies.isKey("gin-session");
+    } ,
+    user(){
+      return this.$store.state.user;
+    },
+  },
+  methods: {
+    ...mapActions([
+      "showAuth", // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
 
       // `mapActions` 也支持载荷：
-      'switchAuthType' // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+      "switchAuthType" // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
     ]),
-    showLogin(){
-      this.switchAuthType('login');
+    ...mapGetters(["getLoginState"]),
+    showLogin() {
+      this.switchAuthType("login");
       this.showAuth();
     },
-    showReg(){
-      this.switchAuthType('reg');
+    showReg() {
+      this.switchAuthType("reg");
       this.showAuth();
-    }
+    },
+    islogin() {
+      return this.$cookie && this.$cookie.isKey("gin-session");
+    },
+    logout() {
+      this.$cookies.remove("gin-session");
+      location.reload()
+    },
+    
   }
 };
 </script>
@@ -91,7 +133,7 @@ export default {
   color: #909090;
   height: 60px;
   z-index: 250;
-    background-color:  rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
 }
 .container {
   max-width: 960px;
@@ -206,21 +248,33 @@ a:hover {
   cursor: pointer;
 }
 .nav-item.submit:after {
-    content: "|";
-    position: absolute;
-    top: 20px;
-    left: 100%;
-    color: hsla(0,0%,59.2%,.4);
+  content: "|";
+  position: absolute;
+  top: 20px;
+  left: 100%;
+  color: hsla(0, 0%, 59.2%, 0.4);
 }
 
 .nav-item.auth {
-    color: #007fff;
+  color: #007fff;
 }
 .nav-item:last-child {
-    padding-right: 0;
+  padding-right: 0;
 }
 .nav-item.auth .login:after {
-    content: "·";
-    margin: 0 .4rem;
+  content: "·";
+  margin: 0 0.4rem;
+}
+.nav-item.notify {
+  font-size: 22px;
+  &:hover {
+    color: #007fff;
+  }
+}
+.nav-item.user-dropdown-list {
+  span {
+    font-size: 10px;
+  }
+
 }
 </style>

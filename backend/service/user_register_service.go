@@ -53,8 +53,16 @@ func (service *UserRegisterService) Register() (model.User, *serializer.Response
 	if err := model.CreateUser(&user); err != nil {
 		return user, errs.BuildErrorResponse(errs.ERR_REGISTER)
 	}
+	// 生成token
+	token, err := generateToken(user)
+	if err != nil {
+		return user, errs.BuildErrorResponse(errs.ERR_REGISTER)
+	}
 	// 发送激活邮件
-	// TODO
+	err = SendActiveEmail(user.UserName, token, user.Email)
+	if err != nil {
+		return user, errs.BuildErrorResponse(errs.ERR_REGISTER)
+	}
 
 	return user, nil
 }

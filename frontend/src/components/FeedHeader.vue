@@ -30,7 +30,7 @@ export default {};
   background-color: #fff;
   display: flex;
   justify-content: space-between;
-  margin-top: 130px;
+  margin-top: 25px;
 }
 .category-nav .list-header {
   width: 100%;

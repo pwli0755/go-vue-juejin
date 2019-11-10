@@ -1,10 +1,10 @@
 <template>
   <div class="feed-data">
     <ul class="entry-list">
-      <li class="item" v-for="n in 10" :key="n">
+      <li class="item" v-for="article in articles" :key="article.id">
         <div class="entry-box">
           <div class="entry">
-            <a href="/post/5c64d15d6fb9a049d37f9c20" target="_blank" class="entry-link">
+            <a :href="/post/+article.id" target="_blank" class="entry-link">
               <!-- 条目内容 -->
               <div class="content-box">
                 <div class="info-box">
@@ -13,16 +13,16 @@
                     <p class="hot">热</p>
                     <p class="post">专栏</p>
                     <p class="username">
-                      <a href="/userhome" target="_blank">pwli</a>
+                      <a href="/userhome" target="_blank">{{article.author}}</a>
                     </p>
-                    <p class="time">3天前</p>
+                    <p class="time">{{article.createdAt}}</p>
                     <p class="tag">
-                      <a href="/tag" target="_blank">前端</a>
+                      <a href="/tag" target="_blank">{{article.tag}}</a>
                     </p>
                   </div>
                   <!-- title 标题-->
                   <div class="title-row">
-                    <a class="title">中高级前端大厂面试秘籍，为你保驾护航金三银四，直通大厂(上)</a>
+                    <a class="title">{{article.title}}</a>
                   </div>
                   <!-- action 点赞 评论 -->
                   <div class="action-row">
@@ -32,7 +32,7 @@
                           <img src=https://b-gold-cdn.xitu.io/v3/static/img/zan.e9d7698.svg alt="" class="icon">
                           <span
                             class="count"
-                          >6818</span>
+                          >{{article.thumb}}</span>
                         </a>
                       </p>
                     </div>
@@ -44,7 +44,7 @@
                             alt
                             class="icon"
                           />
-                          <span class="count">689</span>
+                          <span class="count">{{article.comment}}</span>
                         </a>
                       </p>
                     </div>
@@ -71,7 +71,25 @@
 </template>
 
 <script>
-export default {};
+import * as Article from '@/api/article/'
+export default {
+  data() {
+    return {
+      articles: [],
+    };
+  },
+  mounted(){
+    this.getArticles();
+  },
+  methods:{
+    getArticles(){
+      Article.getArticles().then(res=>{
+        console.log(res);
+        this.articles = res.data;
+      })
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

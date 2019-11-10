@@ -14,10 +14,22 @@
 
       <div class="input-group">
         <div class="input-box">
-          <input name="registerUsername" maxlength="20" placeholder="用户名" class="input" />
+          <input
+            name="registerUsername"
+            maxlength="20"
+            placeholder="用户名"
+            class="input"
+            v-model="user_name"
+          />
         </div>
         <div class="input-box">
-          <input name="registerPhoneNumber" maxlength="64" placeholder="邮箱" class="input" />
+          <input
+            name="registerPhoneNumber"
+            maxlength="64"
+            placeholder="邮箱"
+            class="input"
+            v-model="email"
+          />
         </div>
         <!---->
         <!---->
@@ -29,13 +41,12 @@
             autocomplete="new-password"
             placeholder="密码（不少于 6 位）"
             class="input"
+            v-model="password"
           />
         </div>
       </div>
-      <button class="btn submit-btn">立即注册</button>
-      <div class="switch" v-if="isPop" @click="switchAuthType('login')">
-       已有账号登录
-      </div>
+      <button class="btn submit-btn" @click="register" :disabled="regbtn!='立即注册'">{{regbtn}}</button>
+      <div class="switch" v-if="isPop" @click="switchAuthType('login')">已有账号登录</div>
       <div class="oauth-box">
         第三方登录：
         <img
@@ -69,7 +80,16 @@
 
 <script>
 import { mapActions } from "vuex";
+import * as API from "@/api/auth/";
 export default {
+  data() {
+    return {
+      user_name: "",
+      password: "",
+      email: "",
+      regbtn: "立即注册"
+    };
+  },
   props: {
     isPop: {
       type: Boolean,
@@ -79,8 +99,76 @@ export default {
   methods: {
     ...mapActions([
       "hideAuth", // 将 `this.hideAuth()` 映射为 `this.$store.dispatch('hideAuth')`
-      "switchAuthType",
-    ])
+      "switchAuthType"
+    ]),
+    register() {
+      if (this.user_name == "") {
+        this.$notify({
+          message: "请输入用户名",
+          customClass: "error",
+          showClose: false,
+          duration: 2000
+        });
+        return;
+      } else if (this.password == "") {
+        this.$notify({
+          message: "请输入密码",
+          customClass: "error",
+          showClose: false,
+          duration: 2000
+        });
+        return;
+      } else if (this.email == "") {
+        this.$notify({
+          message: "请输入密码",
+          customClass: "error",
+          showClose: false,
+          duration: 2000
+        });
+        return;
+      }
+      var reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/;
+      if (!reg.test(this.email)) {
+        this.$notify({
+          message: "请输入正确的邮箱",
+          customClass: "error",
+          showClose: false,
+          duration: 2000
+        });
+        return;
+      }
+      // 灰化注册按钮
+      this.regbtn = "请稍后...";
+      API.register({
+        user_name: this.user_name,
+        password: this.password,
+        email: this.email
+      })
+        .then(res => {
+          this.$notify({
+            message: res.data.msg || res.data.error,
+            customClass: "error",
+            showClose: false,
+            duration: 2000
+          });
+          if (res.data.msg && res.data.msg == "注册成功") {
+            this.$store.state.user = res.data.data;
+            // this.changeLoginState();
+            this.hideAuth();
+          }
+          this.regbtn = "立即注册";
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$notify({
+            message: err,
+            customClass: "error",
+            showClose: false,
+            duration: 2000
+          });
+          this.regbtn = "立即注册";
+        });
+    }
   }
 };
 </script>
@@ -90,7 +178,7 @@ export default {
   width: 240px;
   min-width: 240px;
   margin-left: 20px;
-  margin-top: 130px;
+  margin-top: 25px;
 }
 .section {
   background-color: #fff;
@@ -207,11 +295,11 @@ a {
     }
   }
 }
-.switch{
-      color: #007fff;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-    margin: 6px 0 
+.switch {
+  color: #007fff;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+  margin: 6px 0;
 }
 </style>

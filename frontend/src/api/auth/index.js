@@ -1,16 +1,20 @@
-import axios from 'axios';
+import HTTP from '@/api/'
 
 // 注册
-const register = form => axios.post('/api/v1/user/register', form);
+const register = form => HTTP.post('/api/v1/user/register', form);
 
 // 登录
-const login = form => axios.post(`/api/v1/user/login`, form);
+const login = form => HTTP.post(`/api/v1/user/login`, form);
 
 // 获取用户信息
-const getUserInfo = userID => axios.get('/api/v1/user/me', { params: { userID,  } });
+const getUserInfo = userID => HTTP.get('/api/v1/user/me', { params: { userID,  } });
+
+// 激活
+const activateUser = token => HTTP.get('/api/v1/activate', {params: {token}})
 
 export {
   register,
   login,
   getUserInfo,
+  activateUser,
 };

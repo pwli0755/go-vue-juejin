@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import './plugins/element.js'
+import './plugins/element'
 import store from './store'//引入store
+
+import './mock/'
 
 
 Vue.config.productionTip = false

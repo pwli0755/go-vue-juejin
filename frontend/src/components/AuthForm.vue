@@ -38,7 +38,7 @@
           />
         </div>
       </div>
-      <button class="btn" @click.prevent="login">登录</button>
+      <button class="btn" :disabled="loginbtn!='登录'" @click.prevent="login">{{loginbtn}}</button>
       <div class="prompt-box">
         没有账号？
         <span class="clickable" @click="switchAuthType('reg')">注册</span>
@@ -83,13 +83,14 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import * as API from "@/api/auth/";
 export default {
   data() {
     return {
       user_name: "",
-      password: ""
+      password: "",
+      loginbtn: "登录"
     };
   },
   methods: {
@@ -97,38 +98,50 @@ export default {
       "hideAuth", // 将 `this.hideAuth()` 映射为 `this.$store.dispatch('hideAuth')`
       "switchAuthType"
     ]),
+    ...mapMutations(["changeLoginState"]),
     login() {
-      // console.log(process.env)
-
       if (this.user_name == "") {
         this.$notify({
           message: "请输入用户名",
           customClass: "error",
-          showClose: false
+          showClose: false,
+          duration: 2000
         });
         return;
       } else if (this.password == "") {
         this.$notify({
           message: "请输入密码",
           customClass: "error",
-          showClose: false
+          showClose: false,
+          duration: 2000
         });
         return;
       }
+      // 灰化登录按钮
+      this.loginbtn = "登录中...";
       API.login({ user_name: this.user_name, password: this.password })
         .then(res => {
           this.$notify({
-            message: res.data.msg||res.data.error,
+            message: res.data.msg || res.data.error,
             customClass: "error",
-            showClose: false
+            showClose: false,
+            duration: 2000
           });
+          if (res.data.msg && res.data.msg == "登录成功") {
+            this.$store.state.user = res.data.data;
+            this.changeLoginState();
+            this.hideAuth();
+          } 
         })
-        .catch(error => {
+        .catch(() => {
           this.$notify({
-            message: error.data.error,
+            message: "网络开小差了，请稍后再试",
             customClass: "error",
-            showClose: false
+            showClose: false,
+            duration: 2000
           });
+        }).finally(()=>{
+          this.loginbtn = "登录";
         });
     }
   }

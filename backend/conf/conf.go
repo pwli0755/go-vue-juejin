@@ -3,19 +3,16 @@ package conf
 import (
 	"backend/cache"
 	"backend/model"
-	"backend/util"
 	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-	"path"
 )
 
 //Config   系统配置配置
 type Config struct {
 	Server `yaml:"server"`
 	Gorm   `yaml:"gorm"`
-	Redis  `yaml:"redis"`
 }
 
 type Gorm struct {
@@ -26,21 +23,16 @@ type Gorm struct {
 }
 
 type Server struct {
-	Port  string `yaml:"port"`
-	Debug bool   `yaml:"debug"`
-}
-type Redis struct {
-	MaxRetries  int `yaml:"MaxRetries"`
-	PoolSize    int `yaml:"PoolSize"`
-	IdleTimeout int `yaml:"IdleTimeout"`
+	Port         string `yaml:"port"`
+	Debug        bool   `yaml:"debug"`
+	MultiDevices bool   `yaml:"multiDevices"`
 }
 
 var Conf Config
 
 // 项目相关配置，不含敏感信息
 func GetConfig(conf *Config) {
-	currentFilePath := util.CurrentFile()
-	file, err := ioutil.ReadFile(path.Join(path.Dir(currentFilePath), "conf.yaml"))
+	file, err := ioutil.ReadFile("conf/conf.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -52,14 +44,12 @@ func GetConfig(conf *Config) {
 
 // init方法会自动执行
 func init() {
-	// 读取醒目配置
+	// 读取项目配置
 	GetConfig(&Conf)
-
-	currentFilePath := util.CurrentFile()
 	// 读取并加载环境变量, env一般配置敏感信息
-	godotenv.Load(path.Join(path.Dir(currentFilePath), "../.env"))
+	godotenv.Load("./.env")
 	// 读取翻译文件
-	if err := LoadLocales(path.Join(path.Dir(currentFilePath), "locales/zh-cn.yaml")); err != nil {
+	if err := LoadLocales("conf/locales/zh-cn.yaml"); err != nil {
 		panic(err)
 	}
 

@@ -14,6 +14,7 @@ type User struct {
 	PasswordDigest string
 	Status         string
 	Avatar         string `gorm:"size:1000";default:"avatar.png"`
+	Token          string `gorm:type:varchar(100)`
 }
 
 const (

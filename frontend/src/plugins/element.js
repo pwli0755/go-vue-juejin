@@ -10,9 +10,9 @@ import {
 //   Pagination,
 //   Dialog,
 //   Autocomplete,
-//   Dropdown,
-//   DropdownMenu,
-//   DropdownItem,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
 //   Menu,
 //   Submenu,
 //   MenuItem,
@@ -48,7 +48,7 @@ import {
 //   Tree,
 //   Alert,
 //   Slider,
-//   Icon,
+  Icon,
 //   Row,
 //   Col,
 //   Upload,
@@ -75,7 +75,8 @@ import {
 //   TimelineItem,
 //   Link,
 //   Divider,
-//   Image,
+  Image,
+  Avatar,
 //   Calendar,
 //   Backtop,
 //   PageHeader,
@@ -83,15 +84,15 @@ import {
   Loading,
   MessageBox,
   Message,
-  Notification
+  Notification,
 } from 'element-ui';
 
 // Vue.use(Pagination);
 // Vue.use(Dialog);
 // Vue.use(Autocomplete);
-// Vue.use(Dropdown);
-// Vue.use(DropdownMenu);
-// Vue.use(DropdownItem);
+Vue.use(Dropdown);
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
 // Vue.use(Menu);
 // Vue.use(Submenu);
 // Vue.use(MenuItem);
@@ -127,7 +128,7 @@ import {
 // Vue.use(Tree);
 // Vue.use(Alert);
 // Vue.use(Slider);
-// Vue.use(Icon);
+Vue.use(Icon);
 // Vue.use(Row);
 // Vue.use(Col);
 // Vue.use(Upload);
@@ -154,7 +155,8 @@ import {
 // Vue.use(TimelineItem);
 // Vue.use(Link);
 // Vue.use(Divider);
-// Vue.use(Image);
+Vue.use(Image);
+Vue.use(Avatar);
 // Vue.use(Calendar);
 // Vue.use(Backtop);
 // Vue.use(PageHeader);

@@ -4,6 +4,7 @@ import (
 	"backend/cache"
 	"backend/conf"
 	"backend/model"
+
 	"backend/serializer"
 	"backend/service"
 	"backend/util"
@@ -62,6 +63,7 @@ func UserLogin(c *gin.Context) {
 			}
 			// 将sessionID存储至redis
 			cache.RedisClient.Set(sessionIdx, sessionID, 0)
+
 		}
 	}
 	res := serializer.BuildUserResponse(user, serializer.Response{Msg: "登录成功"})

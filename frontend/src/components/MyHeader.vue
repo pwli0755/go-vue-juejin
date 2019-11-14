@@ -40,7 +40,7 @@
             <span>写文章</span>
             <!---->
           </li>
-          <li class="nav-item auth" v-if="!isLogin">
+          <li class="nav-item auth" v-if="!this.getLoginState">
             <span class="login" @click="showLogin">登录</span>
             <span class="register" @click="showReg">注册</span>
           </li>
@@ -99,33 +99,35 @@ export default {
     return {
       logoUrl: logoUrl,
       defaultAvatar,
-      isLogin:false,
-      user:{},
+      user: {}
     };
   },
   mounted() {
     API.getUserInfo()
       .then(res => {
         console.log(res);
-        this.isLogin == (res.data.msg == "用户详情");
-        alert(res.data.msg)
+        if (res.data.msg == "用户详情") {
+          this.setLoginState();
+          this.user = res.data;
+          return;
+        }
       })
       .catch(err => {
         console.log(err);
-      })
-      .finally(() => {});
+      });
   },
   computed: {
-
+    ...mapGetters(["getLoginState"])
   },
   methods: {
     ...mapActions([
       "showAuth", // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
 
       // `mapActions` 也支持载荷：
-      "switchAuthType" // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+      "switchAuthType", // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+      "setLoginState",
     ]),
-    ...mapGetters(["getLoginState"]),
+
     showLogin() {
       this.switchAuthType("login");
       this.showAuth();

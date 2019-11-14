@@ -49,6 +49,7 @@ const tpl = `
                             <p>{{.ActiveUrl}}</p>
                             <p>如果您并未申请go-vue服务账户，可能是其他用户误输入了您的邮箱地址。请忽略此邮件，或者<a
                                         href="mailto:go_vue@163.com?subject=go-vue意见反馈">联系我们</a>。</p>
+
                             <p>©go-vue  <span>&nbsp;&nbsp; {{.Date}}</span></p>
                         </div>
                     </div>

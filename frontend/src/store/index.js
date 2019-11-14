@@ -1,20 +1,20 @@
- import Vue from 'vue';
+import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
- const state={   //要设置的全局访问的state对象
-     showAuth: false,
-     current:'',
-     loginState:false,
-     user:{},
-   };
+const state = {   //要设置的全局访问的state对象
+    showAuth: false,
+    current: '',
+    loginState: false,
+    user: {},
+};
 const getters = {   //实时监听state值的变化(最新状态)
     isShow(state) {  //承载变化的showAuth的值
-       return state.showAuth;
+        return state.showAuth;
     },
-    getCurrent(){  //登录or注册
-       return state.current;
+    getCurrent() {  //登录or注册
+        return state.current;
     },
-    getLoginState(){
+    getLoginState() {
         return state.loginState;
     }
 };
@@ -25,29 +25,32 @@ const mutations = {
     hide(state) {  //同上
         state.showAuth = false;
     },
-    changeCurrent(state,nv){ // 改变current
-       state.current=nv;
+    changeCurrent(state, nv) { // 改变current
+        state.current = nv;
     },
-    changeLoginState(state){
-        state.loginState = !state.loginState;
+    setLogin(state) {
+        state.loginState = true;
     },
-   
+
 };
- const actions = {
+const actions = {
     hideAuth(context) {  //自定义触发mutations里函数的方法，context与store 实例具有相同方法和属性
         context.commit('hide');
     },
     showAuth(context) {  //同上注释
         context.commit('show');
     },
-    switchAuthType(context,nv){   
-        context.commit('changeCurrent',nv)
-     }
+    switchAuthType(context, nv) {
+        context.commit('changeCurrent', nv)
+    },
+    setLoginState(context) {
+        context.commit('setLogin')
+    }
 };
-  const store = new Vuex.Store({
-       state,
-       getters,
-       mutations,
-       actions
+const store = new Vuex.Store({
+    state,
+    getters,
+    mutations,
+    actions
 });
 export default store;

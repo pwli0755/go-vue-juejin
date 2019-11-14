@@ -98,7 +98,7 @@ export default {
       "hideAuth", // 将 `this.hideAuth()` 映射为 `this.$store.dispatch('hideAuth')`
       "switchAuthType"
     ]),
-    ...mapMutations(["changeLoginState"]),
+    ...mapMutations(["setLogin"]),
     login() {
       if (this.user_name == "") {
         this.$notify({
@@ -129,7 +129,7 @@ export default {
           });
           if (res.data.msg && res.data.msg == "登录成功") {
             this.$store.state.user = res.data.data;
-            this.changeLoginState();
+            this.setLogin();
             this.hideAuth();
           } 
         })

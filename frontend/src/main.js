@@ -5,7 +5,9 @@ import './plugins/element'
 import store from './store'//引入store
 
 import './mock/'
-
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+Vue.use(mavonEditor)
 
 Vue.config.productionTip = false
 

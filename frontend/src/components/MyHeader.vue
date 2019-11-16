@@ -35,7 +35,7 @@
             </form>
           </li>
           <!-- 文章 -->
-          <li class="nav-item submit">
+          <li class="nav-item submit" @click="newPost">
             <img src="../assets/article.svg" class="icon" />
             <span>写文章</span>
             <!---->
@@ -143,7 +143,10 @@ export default {
         .finally(() => {
           location.reload();
         });
-    }
+    },
+    newPost(){
+      this.$router.push({ name: 'newPost'});
+    },
   }
 };
 </script>

@@ -22,6 +22,11 @@ const routes = [
     component: () => import('../views/Loading.vue')
   },
   {
+    path: '/editor/drafts/new',
+    name: 'newPost',
+    component:() => import('../views/Editor.vue')
+  },
+  {
     path: '/',
     name: 'home',
     component: Home

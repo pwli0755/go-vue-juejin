@@ -4,9 +4,10 @@ import (
 	"backend/model"
 	"backend/util"
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/jordan-wright/email"
+	"github.com/pwli-star/email"
 	"html/template"
 	"net/smtp"
 	"net/textproto"
@@ -79,7 +80,7 @@ func SendActiveEmail(Name, Token, To string) error {
 		Date      string
 	}{
 		Name:      Name,
-		ActiveUrl: "http://127.0.0.1:8080/#/email/confirm?token=" + Token,
+		ActiveUrl: "http://47.105.53.57/#/email/confirm?token=" + Token,
 		Date:      time.Now().Format("2006-01-02"),
 	}
 	buffer := &bytes.Buffer{}
@@ -95,7 +96,8 @@ func SendActiveEmail(Name, Token, To string) error {
 		HTML:    buffer.Bytes(),
 		Headers: textproto.MIMEHeader{},
 	}
-	err = e.Send("smtp.163.com:25", smtp.PlainAuth("", "go_vue@163.com", os.Getenv("MAIL_PW"), "smtp.163.com"))
+	auth := smtp.PlainAuth("", "go_vue@163.com", "lpw123", "smtp.163.com")
+	err = e.SendWithTLS("smtp.163.com:465", auth, &tls.Config{ServerName: "smtp.163.com",InsecureSkipVerify:true})
 	if err != nil {
 		util.Log.Error(err)
 		return err

@@ -17,8 +17,11 @@ require (
 	github.com/lestrrat/go-envload v0.0.0-20180220120943-6ed08b54a570 // indirect
 	github.com/lestrrat/go-file-rotatelogs v0.0.0-20180223000712-d3151e2a480f
 	github.com/lestrrat/go-strftime v0.0.0-20180220042222-ba3bf9c1d042 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/pkg/errors v0.8.0
+	github.com/pwli-star/email v0.0.0-20191123065722-0066e4ff421e
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
+	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.2.0
 	github.com/tebeka/strftime v0.1.3 // indirect
 	golang.org/x/crypto v0.0.0-20191029031824-8986dd9e96cf

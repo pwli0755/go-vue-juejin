@@ -7,7 +7,6 @@ import (
 
 	"backend/serializer"
 	"backend/service"
-	"backend/util"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"reflect"
@@ -56,11 +55,8 @@ func UserLogin(c *gin.Context) {
 		// 将上次登录生成的session清空
 		sessionIdx := cache.SessionIdxPrefix + strconv.FormatUint(uint64(user.ID), 10)
 		// 获取上次登陆的session ID
-		if previousSsnID, err := cache.RedisClient.Get(sessionIdx).Result(); err == nil && previousSsnID != sessionID {
-			_, err := cache.RedisClient.Del(previousSsnID).Result()
-			if err != nil {
-				util.Log.Error("Delete previous session failed!")
-			}
+		if previousSsnID, _ := cache.RedisClient.Get(sessionIdx).Result(); previousSsnID != sessionID {
+			cache.RedisClient.Del(previousSsnID).Result()
 			// 将sessionID存储至redis
 			cache.RedisClient.Set(sessionIdx, sessionID, 0)
 

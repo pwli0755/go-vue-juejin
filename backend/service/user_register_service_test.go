@@ -2,7 +2,8 @@ package service
 
 import (
 	"bytes"
-	"github.com/jordan-wright/email"
+	"crypto/tls"
+	"github.com/pwli-star/email"
 	"html/template"
 	"net/smtp"
 	"net/textproto"
@@ -20,7 +21,7 @@ func TestSendEmail(t *testing.T) {
 		Date      string
 	}{
 		Name:      "pwli",
-		ActiveUrl: "http://localhost:8080/#/email/confirm?token=",
+		ActiveUrl: "http://47.105.53.57/#/email/confirm?token=",
 		Date:      "2019-11-11",
 	}
 	buffer := &bytes.Buffer{}
@@ -36,8 +37,11 @@ func TestSendEmail(t *testing.T) {
 		HTML:    buffer.Bytes(),
 		Headers: textproto.MIMEHeader{},
 	}
-	err = e.Send("smtp.163.com:25", smtp.PlainAuth("", "go_vue@163.com", "fakepasswd", "smtp.163.com"))
+	//err = e.Send("smtp.163.com:25", smtp.PlainAuth("", "go_vue@163.com", "fakepasswd", "smtp.163.com"))
+	auth := smtp.PlainAuth("", "go_vue@163.com", "", "smtp.163.com")
+	err = e.SendWithTLS("smtp.163.com:465", auth, &tls.Config{ServerName: "smtp.163.com",InsecureSkipVerify:true})
 	if err != nil {
 		t.Fatal(err)
 	}
 }
+
